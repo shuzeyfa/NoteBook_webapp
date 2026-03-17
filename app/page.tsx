@@ -11,8 +11,8 @@ export default function Home() {
           </div>
           <span className=" font-bold text-[24px] ">NoteBook</span>
         </div>
-        <button className=" bg-(--primary) w-16 h-8 rounded-2xl text-black ">
-          signin
+        <button className=" w-16 h-8 rounded-2xl hover:bg-(--secondary) ">
+          sign In
         </button>
       </header>
       
