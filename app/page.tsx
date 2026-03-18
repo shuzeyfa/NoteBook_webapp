@@ -4,14 +4,14 @@ export default function Home() {
   return (
     <main>
 
-      <header className=" w-full max-w-6xl h-14  flex items-center justify-between mb-28 mx-auto ">
+      <header className=" w-[95%] md:w-full  max-w-6xl h-14  flex items-center justify-between mb-28 mx-auto ">
         <div className=" flex gap-2 items-center ">
           <div className=" w-8 h-8 rounded-full flex items-center justify-center bg-primary ">
             <BookOpen width={18} className=" text-black " />
           </div>
           <span className=" font-bold text-[24px] ">NoteBook</span>
         </div>
-        <button className=" w-16 h-8 rounded-2xl hover:bg-seconadry ">
+        <button className=" w-16 h-8 p-1 rounded-2xl hover:bg-secondary hover:cursor-pointer ">
           sign In
         </button>
       </header>
@@ -31,7 +31,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className=" max-w-xl text-center text-lg text-gray-400 ">
+        <div className=" text-center text-lg text-gray-400 w-[90%] max-w-xl ">
           A simple, elegant notebook with an AI assistant that helps you write better, think clearer, and remember more.
         </div>
 
