@@ -98,8 +98,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className=" w-3xl max-w-[90%] bg-secondary/50 mx-auto rounded-2xl p-14 flex flex-col items-center justify-center gap-6 mb-14 ">
-        <div className=" font-bold text-2xl text-center md:text-4xl  ">Ready to start writing?</div>
+      <div className=" w-3xl max-w-[90%] bg-secondary/50 mx-auto rounded-2xl py-14 flex flex-col items-center justify-center gap-6 mb-14 ">
+        <div className=" w-full font-bold text-2xl text-center md:text-4xl  ">Ready to start writing?</div>
         <div className=" text-center text-lg text-gray-400 w-[90%] max-w-xl ">
           Join thousands using Notebook to capture their best ideas
         </div>
