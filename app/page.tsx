@@ -53,7 +53,31 @@ export default function Home() {
 
           </div>
         </div>
-        <div className=" w-[90%] max-w-4xl h-56 bg-transparent border border-secondary rounded-bl-2xl rounded-br-2xl "></div>
+        <div className=" w-[90%] max-w-4xl h-56 bg-transparent border border-secondary rounded-bl-2xl rounded-br-2xl flex items-start justify-center gap-5 p-4 ">
+          <div className=" w-[20%] flex flex-col items-center justify-center gap-2 ">
+            <div className=" w-full h-5 md:h-10 bg-primary/20 rounded-xl "></div>
+            <div className=" w-full h-5 md:h-10 bg-secondary rounded-xl "></div>
+            <div className=" w-full h-5 md:h-10 bg-secondary rounded-xl "></div>
+            <div className=" w-full h-5 md:h-10 bg-secondary rounded-xl "></div>
+          </div>
+          <div className="  h-full flex flex-col flex-1 items-start justify-start gap-2 ">
+            <div className=" w-[70%] md:w-[50%] h-5 md:h-7 bg-primary/20 rounded-xl "></div>
+            <div className=" w-full h-3 bg-gray-400/10 rounded-xl "></div>
+            <div className=" w-full h-3 bg-gray-400/10 rounded-xl "></div>
+            <div className=" w-full h-3 bg-gray-400/10 rounded-xl "></div>
+            <div className=" w-full h-3 bg-gray-400/10 rounded-xl "></div>
+            <div className=" md:hidden w-full h-3 bg-gray-400/10 rounded-xl "></div>
+            <div className=" md:hidden w-full h-3 bg-gray-400/10 rounded-xl "></div>
+            <div className=" md:hidden w-full h-3 bg-gray-400/10 rounded-xl "></div>
+          </div>
+          <div className=" w-[20%] flex flex-col items-center justify-center gap-2 ">
+            <div className=" w-full h-10 flex items-center justify-center gap-2 ">
+              <div className=" w-7 h-[70%] rounded-full bg-primary/70 "></div>
+              <div className="  h-[40%] flex flex-1 items-center rounded-2xl bg-gray-400/20 "></div>
+            </div>
+            <div className=" w-full h-20 bg-secondary rounded-xl "></div>
+          </div>
+        </div>
       </div>
 
       <div className=" flex flex-col items-center justify-center gap-4 ">
