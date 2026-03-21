@@ -1,6 +1,15 @@
+
+
+"use client"
+
+
 import { ArrowRight, BookOpen, Sparkles, Zap, Lock, Copyright } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+
+  const router = useRouter();
+
   return (
     <main>
       <header className=" w-[95%] md:w-full  max-w-6xl h-14  flex items-center justify-between mb-28 mx-auto ">
@@ -10,7 +19,7 @@ export default function Home() {
           </div>
           <span className=" font-bold text-[24px] ">NoteBook</span>
         </div>
-        <button className=" w-16 h-8 p-1 rounded-2xl hover:bg-secondary hover:cursor-pointer ">
+        <button onClick={() => router.push("/signin")} className=" w-16 h-8 p-1 rounded-2xl hover:bg-secondary hover:cursor-pointer ">
           sign In
         </button>
       </header>
