@@ -63,7 +63,7 @@
           setMode("signin")
         }else{
           localStorage.setItem("token", result.token)
-          router.push("/")
+          router.push("/dashboard")
         }
       } catch (err: any) {
         console.error("ERROR:", err.message);

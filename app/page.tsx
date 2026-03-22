@@ -22,6 +22,7 @@ export default function Home() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+
   }
 
   return (
@@ -70,7 +71,9 @@ export default function Home() {
           clearer, and remember more.
         </div>
 
-        <button className=" flex items-center justify-between gap-2 bg-primary py-3 px-4 rounded-tl-2xl rounded-br-2xl hover:rounded-tr-2xl hover:rounded-bl-2xl hover:gap-3 text-black hover:shadow-primary/50 hover:shadow-lg hover:cursor-pointer ">
+        <button 
+          onClick={() => router.push("/dashboard")}
+         className=" flex items-center justify-between gap-2 bg-primary py-3 px-4 rounded-tl-2xl rounded-br-2xl hover:rounded-tr-2xl hover:rounded-bl-2xl hover:gap-3 text-black hover:shadow-primary/50 hover:shadow-lg hover:cursor-pointer ">
           <span>Get Started Free</span>
           <span>
             {" "}
@@ -162,7 +165,9 @@ export default function Home() {
         <div className=" text-center text-lg text-gray-400 w-[90%] max-w-xl ">
           Join thousands using Notebook to capture their best ideas
         </div>
-        <button className=" flex items-center justify-between gap-2 bg-primary py-3 px-4 rounded-tl-2xl rounded-br-2xl hover:rounded-tr-2xl hover:rounded-bl-2xl hover:gap-3 text-black hover:shadow-primary/50 hover:shadow-lg hover:cursor-pointer ">
+        <button 
+          onClick={() => router.push("/dashboard")}
+          className=" flex items-center justify-between gap-2 bg-primary py-3 px-4 rounded-tl-2xl rounded-br-2xl hover:rounded-tr-2xl hover:rounded-bl-2xl hover:gap-3 text-black hover:shadow-primary/50 hover:shadow-lg hover:cursor-pointer ">
           <span>Get Started Free</span>
           <span>
             {" "}
