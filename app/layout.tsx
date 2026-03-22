@@ -13,8 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "What did you learn Today?",
-  description: "This is your simple exercise book",
+  title: "Notebook - Your AI-Powered Note Taking App",
+  description: "Write, organize, and understand your thoughts with AI assistance. A clean, distraction-free note-taking experience.",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
