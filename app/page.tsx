@@ -5,10 +5,19 @@
 
 import { ArrowRight, BookOpen, Sparkles, Zap, Lock, Copyright } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
 
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   return (
     <main>
@@ -19,9 +28,20 @@ export default function Home() {
           </div>
           <span className=" font-bold text-[24px] ">NoteBook</span>
         </div>
-        <button onClick={() => router.push("/signin")} className=" w-16 h-8 p-1 rounded-2xl hover:bg-secondary hover:cursor-pointer ">
-          sign In
-        </button>
+        {isLoggedIn ? (
+          <button
+            className="w-24 h-8 rounded-2xl hover:bg-secondary"
+          >
+            Dashboard
+          </button>
+        ) : (
+          <button
+            onClick={() => router.push("/signin")}
+            className="w-16 h-8 rounded-2xl hover:bg-secondary"
+          >
+            Sign In
+          </button>
+        )}
       </header>
 
       <div className=" flex flex-col items-center justify-center gap-8 mb-24 ">

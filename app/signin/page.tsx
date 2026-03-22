@@ -4,6 +4,7 @@
   import { BookOpen, Eye, EyeOff } from "lucide-react";
 
   import { useForm } from "react-hook-form";
+  import { useRouter } from "next/navigation";
   import { zodResolver } from "@hookform/resolvers/zod";
 
   import {
@@ -15,8 +16,10 @@
 
   export default function AuthPage() {
 
-    const [mode, setMode] = useState<"signin" | "signup">("signin");
+    const [mode, setMode] = useState<"signin" | "signup">("signup");
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const {
       register,
@@ -26,8 +29,47 @@
       resolver: zodResolver(mode === "signin" ? signInSchema : signUpSchema),
     });
 
-    const onSubmit = (data: SignInType | SignUpType) => {
-      console.log(data);
+    const onSubmit = async (data: any) => {
+      try {
+        setLoading(true)
+
+        const endpoint =
+          mode === "signin" ? "/login" : "/register";
+
+        const payload = {
+                email: data.email,
+                password: data.password,
+              }
+
+        const res = await fetch(
+          `https://notebook-backend-2-nl4v.onrender.com${endpoint}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          throw new Error(result.message || "Something went wrong");
+        }
+
+        console.log("SUCCESS:", result);
+        if (mode === "signup"){
+          setMode("signin")
+        }else{
+          localStorage.setItem("token", result.token)
+          router.push("/")
+        }
+      } catch (err: any) {
+        console.error("ERROR:", err.message);
+      } finally {
+        setLoading(false)
+      }
     };
 
     return (
@@ -140,9 +182,14 @@
             {/* Submit */}
             <button
               type="submit"
-              className="bg-primary text-black font-medium py-3 rounded-tl-2xl rounded-br-2xl hover:rounded-tr-2xl hover:rounded-bl-2xl transition-all"
+              disabled={loading}
+              className={` ${loading ? "bg-primary/40 cursor-not-allowed rounded-bl-2xl rounded-tr-2xl" : "bg-primary cursor-pointer"} text-black font-medium py-3 rounded-tl-2xl rounded-br-2xl hover:rounded-tr-2xl hover:rounded-bl-2xl transition-all`}
             >
-              {mode === "signin" ? "Sign In" : "Create Account"}
+              {loading
+                ? "Loading..."
+                : mode === "signin"
+                ? "Sign In"
+                : "Create Account"}
             </button>
 
           </form>
