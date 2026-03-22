@@ -19,6 +19,11 @@ export default function Home() {
     }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  }
+
   return (
     <main>
       <header className=" w-[95%] md:w-full  max-w-6xl h-14  flex items-center justify-between mb-28 mx-auto ">
@@ -30,9 +35,10 @@ export default function Home() {
         </div>
         {isLoggedIn ? (
           <button
+            onClick={handleLogout}
             className="w-24 h-8 rounded-2xl hover:bg-secondary"
           >
-            Dashboard
+            LogOut
           </button>
         ) : (
           <button
