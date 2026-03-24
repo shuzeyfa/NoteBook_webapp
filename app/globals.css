@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary: #00D4FF;
-  --color-secondary: #27272A;
+  --color-primaryColor: #00D4FF;
+  --color-secondaryColor: #27272A;
 }
 
 @theme inline {
@@ -121,6 +121,7 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
 
 @layer base {
   * {

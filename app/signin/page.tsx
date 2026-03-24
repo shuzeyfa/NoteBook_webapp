@@ -75,23 +75,23 @@
     return (
       <main className="min-h-screen flex items-center justify-center px-4">
 
-        <div className="w-full max-w-md bg-secondary/70 border border-secondary rounded-2xl p-8 flex flex-col gap-6">
+        <div className="w-full max-w-md bg-secondaryColor/70 border border-secondaryColor rounded-2xl p-8 flex flex-col gap-6">
 
           {/* Logo */}
           <div className="flex items-center justify-center gap-2">
-            <div className="w-9 h-9 bg-primary rounded-full flex items-center justify-center">
+            <div className="w-9 h-9 bg-primaryColor rounded-full flex items-center justify-center">
               <BookOpen className="text-black" width={18} />
             </div>
             <span className="font-bold text-xl">NoteBook</span>
           </div>
 
           {/* Toggle Buttons */}
-          <div className="flex bg-secondary rounded-xl p-2">
+          <div className="flex bg-secondaryColor rounded-xl p-2">
             <button
               onClick={() => setMode("signin")}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${
                 mode === "signin"
-                  ? "bg-primary text-black"
+                  ? "bg-primaryColor text-black"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -102,7 +102,7 @@
               onClick={() => setMode("signup")}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${
                 mode === "signup"
-                  ? "bg-primary text-black"
+                  ? "bg-primaryColor text-black"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -121,7 +121,7 @@
                 <input
                   {...register("name")}
                   placeholder="Name"
-                  className="bg-secondary border border-secondary rounded-xl px-4 py-3 focus:outline-none focus:border-primary"
+                  className="bg-secondaryColor border border-secondaryColor rounded-xl px-4 py-3 focus:outline-none focus:border-primaryColor"
                 />
                 {(errors as any).name && (
                   <p className="text-red-400 text-sm">{(errors as any).name.message}</p>
@@ -133,7 +133,7 @@
             <input
               {...register("email")}
               placeholder="Email"
-              className="bg-secondary border border-secondary rounded-xl px-4 py-3 focus:outline-none focus:border-primary"
+              className="bg-secondaryColor border border-secondaryColor rounded-xl px-4 py-3 focus:outline-none focus:border-primaryColor"
             />
 
             {errors.email && (
@@ -146,7 +146,7 @@
                 {...register("password")}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="w-full bg-secondary border border-secondary rounded-xl px-4 py-3 pr-10 focus:outline-none focus:border-primary"
+                className="w-full bg-secondaryColor border border-secondaryColor rounded-xl px-4 py-3 pr-10 focus:outline-none focus:border-primaryColor"
               />
 
               <button
@@ -168,7 +168,7 @@
                   {...register("confirm")}
                   type="password"
                   placeholder="Confirm Password"
-                  className="bg-secondary border border-secondary rounded-xl px-4 py-3 focus:outline-none focus:border-primary"
+                  className="bg-secondaryColor border border-secondaryColor rounded-xl px-4 py-3 focus:outline-none focus:border-primaryColor"
                 />
 
                 {(errors as any).confirm && (
@@ -183,7 +183,7 @@
             <button
               type="submit"
               disabled={loading}
-              className={` ${loading ? "bg-primary/40 cursor-not-allowed rounded-bl-2xl rounded-tr-2xl" : "bg-primary cursor-pointer"} text-black font-medium py-3 rounded-tl-2xl rounded-br-2xl hover:rounded-tr-2xl hover:rounded-bl-2xl transition-all`}
+              className={` ${loading ? "bg-primaryColor/40 cursor-not-allowed rounded-bl-2xl rounded-tr-2xl" : "bg-primaryColor cursor-pointer"} text-black font-medium py-3 rounded-tl-2xl rounded-br-2xl hover:rounded-tr-2xl hover:rounded-bl-2xl transition-all`}
             >
               {loading
                 ? "Loading..."
