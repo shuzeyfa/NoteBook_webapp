@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Plus, Menu, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { authAPI } from '@/lib/api';
 
 interface MobileNavProps {
   user: { name: string; email: string } | null;
@@ -14,9 +15,14 @@ export default function MobileNav({ user, onCreateNote, notesCount }: MobileNavP
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.push('/signin');
+  const handleLogout = async () => {
+    try {
+      await authAPI.logout();
+    } catch (error) {
+      console.error('[MobileNav] Logout error:', error);
+      localStorage.removeItem('token');
+      router.push('/signin');
+    }
   };
 
   return (

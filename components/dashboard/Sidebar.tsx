@@ -3,14 +3,7 @@
 import { useState } from 'react';
 import { Plus, Trash2, LogOut, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { authAPI, type Note } from '@/lib/api';
 
 interface SidebarProps {
   notes: Note[];
@@ -33,9 +26,14 @@ export default function Sidebar({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.push('/signin');
+  const handleLogout = async () => {
+    try {
+      await authAPI.logout();
+    } catch (error) {
+      console.error('[Sidebar] Logout error:', error);
+      localStorage.removeItem('token');
+      router.push('/signin');
+    }
   };
 
   const formatDate = (dateString: string) => {

@@ -6,14 +6,7 @@ import Sidebar from '@/components/dashboard/Sidebar';
 import Editor from '@/components/dashboard/Editor';
 import AIAssistant from '@/components/dashboard/AIAssistant';
 import MobileNav from '@/components/dashboard/MobileNav';
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { notesAPI, type Note } from '@/lib/api';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -45,56 +38,20 @@ export default function Dashboard() {
   const loadNotes = async () => {
     try {
       setIsLoading(true);
-      const token = localStorage.getItem('token');
+      setError(null);
       
-      // TODO: Replace with your actual backend API endpoint
-      const response = await fetch('https://notebook-backend-2-nl4v.onrender.com/notes', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          localStorage.removeItem('token');
-          router.push('/signin');
-          return;
-        }
-        throw new Error('Failed to load notes');
-      }
-
-      const data = await response.json();
-      setNotes(data || []);
+      const notes = await notesAPI.getAll();
+      console.log('[Dashboard] Loaded notes:', notes);
+      setNotes(notes);
       
-      // Select first note or create default
-      if (data && data.length > 0) {
-        setSelectedNoteId(data[0].id);
-      } else {
-        // Create default welcome note
-        const welcomeNote: Note = {
-          id: 'welcome',
-          title: 'Welcome to Notebook',
-          content: 'Start writing your thoughts here...',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        setNotes([welcomeNote]);
-        setSelectedNoteId('welcome');
+      // Select first note
+      if (notes && notes.length > 0) {
+        setSelectedNoteId(notes[0].id);
       }
     } catch (err) {
-      console.error('Error loading notes:', err);
+      console.error('[Dashboard] Error loading notes:', err);
       setError('Failed to load notes. Please try again.');
-      // Set default welcome note on error
-      const welcomeNote: Note = {
-        id: 'welcome',
-        title: 'Welcome to Notebook',
-        content: 'Start writing your thoughts here...',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setNotes([welcomeNote]);
-      setSelectedNoteId('welcome');
+      setNotes([]);
     } finally {
       setIsLoading(false);
     }
@@ -104,65 +61,47 @@ export default function Dashboard() {
 
   const handleCreateNote = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const newNote: Note = {
-        id: Date.now().toString(),
+      setError(null);
+      const newNoteData = {
         title: 'New Note',
         content: '',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
 
-      // TODO: Replace with your actual backend API endpoint
-      // const response = await fetch('https://notebook-backend-2-nl4v.onrender.com/notes', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`,
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(newNote),
-      // });
+      const createdNote = await notesAPI.create(newNoteData);
+      console.log('[Dashboard] Note created:', createdNote);
 
-      setNotes([newNote, ...notes]);
-      setSelectedNoteId(newNote.id);
+      setNotes([createdNote, ...notes]);
+      setSelectedNoteId(createdNote.id);
     } catch (err) {
-      console.error('Error creating note:', err);
-      setError('Failed to create note');
+      console.error('[Dashboard] Error creating note:', err);
+      setError('Failed to create note. Please try again.');
     }
   };
 
   const handleSaveNote = async (updatedNote: Note) => {
     try {
-      const token = localStorage.getItem('token');
-      
-      // TODO: Replace with your actual backend API endpoint
-      // const response = await fetch(`https://notebook-backend-2-nl4v.onrender.com/notes/${updatedNote.id}`, {
-      //   method: 'PUT',
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`,
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(updatedNote),
-      // });
+      setError(null);
+      const savedNote = await notesAPI.update(updatedNote.id, {
+        title: updatedNote.title,
+        content: updatedNote.content,
+        updatedAt: new Date().toISOString(),
+      });
 
-      setNotes(notes.map((note) => (note.id === updatedNote.id ? updatedNote : note)));
+      console.log('[Dashboard] Note saved:', savedNote);
+      setNotes(notes.map((note) => (note.id === updatedNote.id ? savedNote : note)));
     } catch (err) {
-      console.error('Error saving note:', err);
-      setError('Failed to save note');
+      console.error('[Dashboard] Error saving note:', err);
+      setError('Failed to save note. Please try again.');
     }
   };
 
   const handleDeleteNote = async (noteId: string) => {
     try {
-      const token = localStorage.getItem('token');
-      
-      // TODO: Replace with your actual backend API endpoint
-      // const response = await fetch(`https://notebook-backend-2-nl4v.onrender.com/notes/${noteId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`,
-      //   },
-      // });
+      setError(null);
+      await notesAPI.delete(noteId);
+      console.log('[Dashboard] Note deleted:', noteId);
 
       const newNotes = notes.filter((note) => note.id !== noteId);
       setNotes(newNotes);
@@ -171,8 +110,8 @@ export default function Dashboard() {
         setSelectedNoteId(newNotes.length > 0 ? newNotes[0].id : null);
       }
     } catch (err) {
-      console.error('Error deleting note:', err);
-      setError('Failed to delete note');
+      console.error('[Dashboard] Error deleting note:', err);
+      setError('Failed to delete note. Please try again.');
     }
   };
 

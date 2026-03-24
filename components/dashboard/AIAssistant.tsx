@@ -2,14 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send, Zap, Copy, Check } from 'lucide-react';
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { aiAPI, type Note } from '@/lib/api';
 
 interface Message {
   id: string;
@@ -56,17 +49,35 @@ export default function AIAssistant({ note }: AIAssistantProps) {
     setInputValue('');
     setIsLoading(true);
 
-    // TODO: Replace with your actual AI API endpoint
-    // For now, we'll show a demo response
-    setTimeout(() => {
+    try {
+      // Determine the action based on the message
+      let action: 'explain' | 'summarize' | 'expand' = 'explain';
+      if (message.toLowerCase().includes('summarize')) {
+        action = 'summarize';
+      } else if (message.toLowerCase().includes('expand')) {
+        action = 'expand';
+      }
+
+      const response = await aiAPI.analyze(note.id, note.content, action);
+      console.log('[AIAssistant] Response:', response);
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `I'd love to help with "${message}", but the AI integration is not yet configured. Connect your preferred AI service (OpenAI, Anthropic, etc.) to enable this feature.`,
+        content: response || 'Sorry, I could not process that request.',
       };
       setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('[AIAssistant] Error:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleQuickAction = (action: string) => {
