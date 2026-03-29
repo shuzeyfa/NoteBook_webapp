@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { BookOpen, Plus, Save, Trash2, Send, RefreshCw } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const API_BASE = "https://notebook-backend-2-nl4v.onrender.com";
 
@@ -27,6 +29,9 @@ export default function Dashboard() {
   const editorRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
 
+  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; content: string }[]>([]);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+
   // ===================== AUTH CHECK =====================
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -36,6 +41,14 @@ export default function Dashboard() {
     }
     fetchNotes();
   }, [router]);
+
+
+  useEffect(() => {
+    if (selectedNote) {
+      setMessages([]);        // Clear previous chat when changing note
+      setAiResponse("");      // Remove if you still have this old state
+    }
+  }, [selectedNote?.id]);
 
   // ===================== FETCH NOTES =====================
   const fetchNotes = async () => {
@@ -151,10 +164,19 @@ export default function Dashboard() {
 
   // ===================== AI =====================
   const callAI = async (message: string) => {
-    if (!selectedNote) {
-      alert("Please select or create a note first");
-      return;
-    }
+    if (!selectedNote || !message.trim()) return;
+
+    // Add user message immediately
+    const userMsg = {
+      id: Date.now().toString(),
+      role: 'user' as const,
+      content: message,
+    };
+    setMessages((prev) => [...prev, userMsg]);
+
+    setAskInput("");
+    setIsAiLoading(true);
+
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API_BASE}/notes/${selectedNote.id}/ai`, {
@@ -167,10 +189,25 @@ export default function Dashboard() {
       });
 
       if (!res.ok) throw new Error();
+
       const data = await res.json();
-      setAiResponse(data.response);
+
+      const aiMsg = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant' as const,
+        content: data.response,
+      };
+
+      setMessages((prev) => [...prev, aiMsg]);
     } catch (err) {
-      setAiResponse("AI is temporarily unavailable. Please try again.");
+      const errorMsg = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant' as const,
+        content: "Sorry, I couldn't get a response right now. Please try again.",
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
+      setIsAiLoading(false);
     }
   };
 
@@ -361,29 +398,70 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* RIGHT AI SIDEBAR - unchanged */}
-      <div className="w-80 border-l border-white/10 bg-[#1A1A1A] flex flex-col">
+      
+      {/* ==================== RIGHT AI SIDEBAR ==================== */}
+      <div className="w-[20%] border-l border-white/10 bg-[#1A1A1A] flex flex-col">
         <div className="px-6 py-5 flex items-center gap-3 border-b border-white/10">
           <div className="w-9 h-9 bg-primaryColor rounded-2xl flex items-center justify-center text-black">
             <BookOpen size={22} />
           </div>
           <div>
             <div className="font-semibold">AI Assistant</div>
-            <div className="text-xs text-gray-400">Always ready to help</div>
+            <div className="text-xs text-gray-400">Powered by Groq</div>
           </div>
         </div>
 
-        <div className="flex-1 p-6 overflow-auto text-sm leading-relaxed">
-          {aiResponse ? (
-            <div className="bg-white/5 rounded-2xl p-5">{aiResponse}</div>
+        {/* Chat Area */}
+        <div className="flex-1 p-6 overflow-y-auto space-y-6">
+          {messages.length === 0 ? (
+            /* ==================== WELCOME TEXT (when no chat) ==================== */
+            <div className="text-gray-400 text-center mt-10">
+              Hi! I&apos;m your AI assistant.<br /><br />
+              I can help you understand, summarize, or expand your notes.<br /><br />
+              Try the quick actions below or ask me anything!
+            </div>
           ) : (
-            <div className="text-gray-400">
-              Hi! I&apos;m your AI assistant. I can help you understand, summarize, or explain your notes.<br /><br />
-              Try clicking one of the buttons below!
+            /* ==================== CHAT MESSAGES ==================== */
+            messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[80%] px-4 py-3 rounded-3xl text-sm leading-relaxed ${
+                    msg.role === 'user'
+                      ? 'bg-primaryColor text-black rounded-tr-none'
+                      : 'bg-white/10 text-white rounded-tl-none'
+                  }`}
+                >
+                  {msg.role === 'assistant' ? (
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {msg.content}
+                    </ReactMarkdown>
+                  ) : (
+                    msg.content
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+
+          {/* Loading indicator */}
+          {isAiLoading && (
+            <div className="flex justify-start">
+              <div className="bg-white/10 px-5 py-3 rounded-3xl rounded-tl-none flex items-center gap-2">
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:150ms]" />
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:300ms]" />
+                </div>
+                <span className="text-xs text-gray-400">AI is thinking...</span>
+              </div>
             </div>
           )}
         </div>
 
+        {/* Quick Actions & Input */}
         <div className="p-6 border-t border-white/10">
           <div className="text-xs text-gray-400 mb-3">QUICK ACTIONS</div>
           <div className="grid grid-cols-2 gap-2">
@@ -406,19 +484,25 @@ export default function Dashboard() {
               type="text"
               value={askInput}
               onChange={(e) => setAskInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && askInput.trim() && (callAI(askInput), setAskInput(""))}
-              placeholder="Ask anything..."
-              className="flex-1 rounded-tl-md rounded-br-md hover:rounded-tr-md hover:rounded-bl-md bg-white/5 border border-white/10 px-2 py-3 outline-none focus:bg-white/10"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && askInput.trim()) {
+                  callAI(askInput);
+                  setAskInput("");
+                }
+              }}
+              placeholder="Ask anything about the note..."
+              className="flex-1 bg-white/5 border border-white/10 rounded-tl-md rounded-br-md hover:rounded-tr-md hover:rounded-bl-md px-4 py-3 outline-none focus:bg-white/10"
             />
             <button
-              onClick={() => { if (askInput.trim()) { callAI(askInput); setAskInput(""); } }}
-              className="bg-primaryColor  rounded-tl-md rounded-br-md hover:rounded-tr-md hover:rounded-bl-md text-black w-15  flex flex-col items-center justify-center"
+              onClick={() => {
+                if (askInput.trim()) {
+                  callAI(askInput);
+                  setAskInput("");
+                }
+              }}
+              className="bg-primaryColor text-black px-6 rounded-tl-md rounded-br-md hover:rounded-tr-md hover:rounded-bl-md flex items-center"
             >
-    
-              <span>
-                <Send size={14} />
-              </span>
-              <span>Ask</span>
+              <Send size={18} />
             </button>
           </div>
         </div>
