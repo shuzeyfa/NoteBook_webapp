@@ -534,7 +534,7 @@ export default function Dashboard() {
       {/* ===================== MOBILE NOTES DRAWER ===================== */}
       {isNotesDrawerOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-[9999] bg-black/70 transition-opacity duration-300"
+          className="lg:hidden fixed inset-0 z-9999 bg-black/70 transition-opacity duration-300"
           onClick={() => setIsNotesDrawerOpen(false)}
         >
           <div
@@ -611,7 +611,7 @@ export default function Dashboard() {
       {/* ===================== MOBILE AI BOTTOM SHEET (full chat UI) ===================== */}
       {isAISheetOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-[9999] bg-black/70 flex items-end transition-opacity duration-300"
+          className="lg:hidden fixed inset-0 z-9999 bg-black/70 flex items-end transition-opacity duration-300"
           onClick={() => setIsAISheetOpen(false)}
         >
           <div
