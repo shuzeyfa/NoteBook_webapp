@@ -20,6 +20,7 @@
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const [ResponseError, setResponseError] = useState("");
 
     const {
       register,
@@ -53,9 +54,10 @@
         );
 
         const result = await res.json();
+        console.log("RESPONSE:", result);
 
         if (!res.ok) {
-          throw new Error(result.message || "Something went wrong");
+          throw new Error(result.error || "Something went wrong");
         }
 
         console.log("SUCCESS:", result);
@@ -66,6 +68,7 @@
           router.push("/dashboard")
         }
       } catch (err: any) {
+        setResponseError(err.message);
         console.error("ERROR:", err.message);
       } finally {
         setLoading(false)
@@ -191,6 +194,10 @@
                 ? "Sign In"
                 : "Create Account"}
             </button>
+
+            {ResponseError && (
+              <p className="text-red-400 text-center text-md">{ResponseError}</p>
+            )}
 
           </form>
         </div>
