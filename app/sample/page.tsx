@@ -406,19 +406,31 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Floating AI Button - Mobile & tablet only */}
-            <button
-              onClick={() => {
-                if (!selectedNote) {
-                  alert("Please select or create a note first");
-                  return;
-                }
-                setIsAISheetOpen(true);
-              }}
-              className="lg:hidden absolute bottom-8 right-8 bg-primaryColor text-black w-14 h-14 rounded-3xl flex items-center justify-center shadow-2xl hover:scale-110 transition-all z-20"
-            >
-              <Sparkles size={28} />
-            </button>
+            {/* 🔥 PREMIUM FLOATING AI BUTTON - Mobile Only */}
+<button
+  onClick={() => {
+    if (!selectedNote) {
+      alert("Please select or create a note first");
+      return;
+    }
+    setIsAISheetOpen(true);
+  }}
+  className={`lg:hidden fixed bottom-8 right-8 w-16 h-16 
+bg-gradient-to-br from-primaryColor via-primaryColor/80 to-primaryColor/50
+text-black rounded-3xl flex items-center justify-center
+shadow-[0_0_0_6px_color-mix(in_srgb,var(--color-primaryColor)_25%,transparent),0_8px_25px_-4px_color-mix(in_srgb,var(--color-primaryColor)_50%,transparent),0_0_50px_-10px_color-mix(in_srgb,var(--color-primaryColor)_70%,transparent)]
+hover:shadow-[0_0_0_8px_color-mix(in_srgb,var(--color-primaryColor)_35%,transparent),0_12px_35px_-4px_color-mix(in_srgb,var(--color-primaryColor)_70%,transparent),0_0_70px_-8px_color-mix(in_srgb,var(--color-primaryColor)_90%,transparent)]
+hover:scale-[1.12] active:scale-95 
+transition-all duration-300 ease-out
+border border-white/30
+z-50
+${isAISheetOpen ? "opacity-0 pointer-events-none" : ""}`}
+>
+  <Sparkles 
+    size={34} 
+    className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" 
+  />
+</button>
           </div>
         </div>
 
